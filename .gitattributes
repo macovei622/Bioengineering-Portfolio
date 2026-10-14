@@ -1,0 +1,3 @@
+Project_1_EMG_Processing/EMG.Classification/files/Ninapro_DB1.csv.part* filter=lfs diff=lfs merge=lfs -text
+Project_1_EMG_Processing/EMG.Classification/files/S1_A1_E1.mat filter=lfs diff=lfs merge=lfs -text
+Project_1_EMG_Processing/EMG.Classification/files/archive.zip filter=lfs diff=lfs merge=lfs -text

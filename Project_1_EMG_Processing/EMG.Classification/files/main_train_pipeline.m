@@ -17,10 +17,19 @@
 
 clear; clc; close all;
 
-%% 1) Load data (synthetic for now - swap for real NinaPro as noted above)
-[emg_raw, labels, fs] = generate_synthetic_emg();
-fprintf('Loaded signal: %d samples, %d channels, fs=%d Hz\n', ...
+%% 1) Load data (SWAPPED: now loading real converted NinaPro data)
+S = load('S1_A1_E1.mat');
+emg_raw = S.emg;
+labels  = S.restimulus;
+fs      = 100;   % Частота дискретизации для датасета NinaPro DB1
+
+% Срезаем гигантский массив: берем только первые 100 000 строк для скорости
+emg_raw = emg_raw(1:100000, :);
+labels  = labels(1:100000);
+
+fprintf('Loaded REAL signal (Optimized): %d samples, %d channels, fs=%d Hz\n', ...
     size(emg_raw,1), size(emg_raw,2), fs);
+
 
 %% 2) Preprocess: bandpass 20-450 Hz + 50 Hz notch
 emg_clean = preprocess_emg(emg_raw, fs);
