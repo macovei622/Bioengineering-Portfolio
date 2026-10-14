@@ -13,7 +13,7 @@ function [emg, labels, fs] = generate_synthetic_emg()
 %   fs     - sampling frequency in Hz (NinaPro DB1 uses 100 Hz for the
 %            Cybergrasp-based acquisition; DB2/DB3 use 2000 Hz Delsys.
 %            We use 2000 Hz here since it is more realistic for the
-%            20-450 Hz bandpass used later.)
+%            raw-EMG example; it is not used for RMS-processed NinaPro DB1.)
 
     rng(42); % reproducibility while you are debugging the pipeline
 

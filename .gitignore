@@ -1,0 +1,25 @@
+# Operating-system metadata
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# MATLAB and Simulink generated files
+*.asv
+*.m~
+*.autosave
+*.slx.r*
+*.mdl.r*
+*.slxc
+slprj/
+sccprj/
+codegen/
+*.mat
+*.mex*
+*.mlappinstall
+*.mltbx
+*.ctf
+helpsearch*/
+.MATLABDriveTag
+.buildtool/
+*.sbproj.backup
+*.sbproj.bak

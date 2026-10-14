@@ -1,91 +1,61 @@
-# EMG-классификация жестов — проект 1
+# EMG Gesture Classification
 
-## Что тут есть (реальный, рабочий код)
+## Overview
 
-- `generate_synthetic_emg.m` — генератор фейковых EMG-данных той же
-  структуры, что NinaPro (только чтобы проверить пайплайн, пока не
-  скачал настоящие данные). **Никогда не используй результаты на этих
-  данных как реальную точность в резюме/на собеседовании.**
-- `preprocess_emg.m` — полосовой фильтр Баттерворта 4-го порядка
-  (20–450 Гц) + режекторный фильтр 50 Гц.
-- `segment_windows.m` — нарезка на скользящие окна 200 мс с шагом 50 мс
-  (75% перекрытие).
-- `extract_features.m` — MAV, RMS, WL, ZC для каждого канала.
-- `main_train_pipeline.m` — главный скрипт: собирает всё вместе,
-  обучает LDA и SVM, строит confusion matrix, сохраняет модель.
-- `simulink_function_block.m` — код для блока MATLAB Function внутри
-  Simulink (буферизация + классификация + мажоритарное сглаживание).
+This MATLAB pipeline uses RMS-processed NinaPro DB1 signals (10 channels,
+100 Hz). It extracts window-level features and compares LDA and linear SVM
+classifiers.
 
-## Как запустить (шаг за шагом)
+The DB1 electrodes apply RMS processing before recording. The pipeline does
+not apply a raw-EMG 20–450 Hz band-pass or a 50 Hz notch filter.
 
-1. Открой MATLAB, перейди в папку с этими файлами.
-2. Запусти `main_train_pipeline.m`.
-3. Убедись, что видишь в консоли accuracy LDA и SVM, и появились два
-   окна с confusion matrix.
-4. Проверится файл `trained_emg_model.mat` — он появится в этой же
-   папке.
+## Files
 
-**Тулбоксы, которые нужны:** Signal Processing Toolbox (`designfilt`,
-`filtfilt`), Statistics and Machine Learning Toolbox (`fitcdiscr`,
-`fitcecoc`, `confusionchart`). Проверь через `ver` в MATLAB, что они
-установлены — без них скрипт не запустится.
+- `main_train_pipeline.m` loads the converted dataset, creates a
+  repetition-group holdout, trains classifiers, reports accuracy and
+  balanced accuracy, and saves the LDA model.
+- `convert_ninapro_csv_to_mat.m` converts the CSV and exports signal,
+  labels, sampling rate, and repetition metadata.
+- `restore_ninapro_csv.m` reconstructs the CSV from the repository's
+  Git-LFS chunks when needed.
+- `segment_windows.m` creates 200 ms windows at 50 ms steps and discards
+  windows that cross repetition boundaries.
+- `extract_features.m` computes MAV, RMS, waveform length, and slope sign
+  changes (SSC) for each channel.
+- `preprocess_emg.m` validates the DB1 sampling rate and leaves the
+  preprocessed envelope unchanged.
+- `generate_synthetic_emg.m` is a separate synthetic-data generator and is
+  not used by the main pipeline.
+- `simulink_function_block.m` contains an example MATLAB Function block
+  for 100 Hz input.
 
-## Как перейти на настоящий NinaPro (обязательно перед тем, как
-## показывать результат кому-либо)
+## Run
 
-CSV датасета хранится в репозитории частями, чтобы каждая часть укладывалась
-в ограничение Git LFS на размер одного файла. Перед конвертацией открой эту
-папку в MATLAB и запусти `restore_ninapro_csv.m`: он соберёт части обратно
-в исходный `Ninapro_DB1.csv`. `convert_ninapro_csv_to_mat.m` также выполнит
-восстановление автоматически, если исходного CSV ещё нет.
+1. Open MATLAB in this folder.
+2. Run `convert_ninapro_csv_to_mat.m` to create `S1_A1_E1.mat`.
+3. Run `main_train_pipeline.m`.
+4. Review the printed accuracy, balanced accuracy, majority-class baseline,
+   and confusion matrices. The script saves `trained_emg_model.mat`.
 
-1. Зарегистрируйся и скачай NinaPro DB1 на http://ninapro.hevs.ch
-2. В `.mat`-файлах датасета есть переменные `emg` и `restimulus` —
-   замени секцию "Load data" в `main_train_pipeline.m`, как описано
-   комментарием прямо в файле.
-3. Оставь только 4–5 контрастных жестов (не все 20+) — иначе точность
-   упадёт и объяснять будет сложнее.
-4. Перезапусти пайплайн — теперь цифры accuracy настоящие, их можно
-   указывать где угодно.
+The pipeline processes a contiguous prefix of up to 100,000 samples and
+holds out complete subject/exercise/repetition groups. It excludes windows
+that cross group boundaries. This avoids splitting overlapping windows
+from the same repetition across train and test, but it is not a
+subject-independent evaluation. The existing model file and confusion
+matrix screenshots predate this evaluation procedure and must not be
+presented as its results.
 
-## Как собрать Simulink 3D-анимацию (это делаешь руками в GUI, не кодом)
+The required MATLAB toolbox is Statistics and Machine Learning Toolbox
+(`fitcdiscr`, `fitcecoc`, `confusionmat`, `confusionchart`).
 
-Это визуальная часть, автоматически сгенерировать её кодом нельзя,
-поэтому — пошагово руками:
+## Limitations
 
-1. Открой Simulink, создай новую модель.
-2. Блок **"From Workspace"** — подаёт тестовую EMG-запись (ту, что
-   модель не видела при обучении) как временной сигнал.
-3. Блок **"MATLAB Function"** — вставь туда код из
-   `simulink_function_block.m`.
-4. Открой **Simulink 3D Animation → World Editor**, найди готовую
-   VRML-модель кисти (ищи "hand.wrl" в примерах тулбокса, или собери
-   упрощённо — просто 2–3 сегмента с шарнирами, если готовой модели
-   нет под рукой).
-5. Блок **"VR Sink"** — подключи к нему выход MATLAB Function (номер
-   жеста), внутри VR Sink пропиши: если жест == 2 → угол сгибания
-   пальцев едет от 0 до 90° (через Rate Limiter, чтобы было плавно, не
-   скачком).
-6. Запусти симуляцию — кисть должна двигаться синхронно с жестами из
-   тестовой записи.
-
-Если готовой VRML-модели кисти под рукой нет и на её поиск/сборку не
-хватает времени — честный fallback для защиты: анимировать не полную
-кисть, а просто открывающийся/закрывающийся "захват" (2 сегмента,
-1 степень свободы). Это всё ещё показывает замкнутый цикл сигнал →
-действие, просто проще визуально.
-
-## Чек-лист перед защитой — сможешь объяснить без бумажки?
-
-- Почему полоса именно 20–450 Гц, а не шире/уже
-- Почему окно именно 200 мс, а не 100 или 500
-- Что физически означает каждый из 4 признаков (MAV, RMS, WL, ZC) —
-  не формулу, а физический смысл
-- Почему LDA предпочтительнее SVM для реального протеза (вычислительная
-  стоимость на embedded-системе)
-- Зачем нужно мажоритарное сглаживание (что такое "дребезг" выхода
-  классификатора и почему он возникает)
-
-Если на все пять можешь ответить без подглядывания — проект готов к
-защите. Если где-то спотыкаешься — лучше проговорить это ещё раз до
-собеседования, чем на нём самом.
+- Results use only a pilot subset, not the complete NinaPro DB1 dataset.
+- Grouped holdout is by repetition, not by subject.
+- The 200 ms window and 50 ms step have not been selected through a
+  systematic parameter study.
+- Embedded inference performance has not been benchmarked on target
+  hardware.
+- The Simulink block is an example for normal simulation. Its use of
+  `coder.extrinsic` and `load` does not provide standalone embedded code
+  generation.

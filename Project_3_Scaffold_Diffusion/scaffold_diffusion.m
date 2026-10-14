@@ -1,4 +1,4 @@
-% Моделирование диффузии кислорода в 3D-скаффолде (2D срез)
+% 2D-модель диффузии кислорода в скаффолде (поперечное сечение)
 % Уравнение реакции-диффузии (Метод конечных разностей)
 clear; clc; close all;
 
@@ -23,7 +23,7 @@ mask_solid = ones(N, N);
 mask_solid(1,:) = 0; mask_solid(end,:) = 0; % Среда сверху/снизу
 mask_solid(:,1) = 0; mask_solid(:,end) = 0; % Среда слева/справа
 
-% Сценарий Б: Оптимизированный скаффолд (сетка макроканалов)
+% Сценарий Б: Скаффолд с вручную заданной регулярной сеткой каналов
 mask_porous = mask_solid;
 spacing = round(N/4); % Шаг между каналами
 width = 3;            % Полуширина канала
@@ -55,9 +55,11 @@ fprintf('Пористый матрикс: %.1f%% ткани в зоне некр
 living_tissue_solid = sum(C_solid(:) >= C_crit & mask_solid(:) == 1);
 living_tissue_porous = sum(C_porous(:) >= C_crit & mask_porous(:) == 1);
 
-fprintf('Полезный объем ЖИВОЙ ткани (относительно полного куба):\n');
-fprintf('Сплошной матрикс: %.1f%%\n', (living_tissue_solid / N^2) * 100);
-fprintf('Пористый матрикс: %.1f%%\n', (living_tissue_porous / N^2) * 100);
+fprintf('Живая ткань как доля полной площади сетки:\n');
+fprintf('Сплошная маска: %.1f%%\n', (living_tissue_solid / N^2) * 100);
+fprintf('Маска с каналами: %.1f%%\n', (living_tissue_porous / N^2) * 100);
+fprintf('Удалено от исходной площади ткани каналами: %.1f%%\n', ...
+    (sum(mask_solid(:)) - sum(mask_porous(:))) / sum(mask_solid(:)) * 100);
 
 %% 5. Визуализация (Графики для отчета)
 figure('Color', 'w', 'Position', [100, 100, 900, 700], 'Name', 'Scaffold O2 Diffusion');
@@ -76,7 +78,7 @@ caxis([0 C0]);
 
 % Геометрия 2
 subplot(2,2,2);
-imagesc(1-mask_porous); axis image off; title('Оптимизированный (Архитектура)');
+imagesc(1-mask_porous); axis image off; title('Каналы заданы вручную');
 % Распределение O2 2
 subplot(2,2,4);
 contourf(C_porous, 20, 'LineStyle', 'none'); axis image off; hold on;

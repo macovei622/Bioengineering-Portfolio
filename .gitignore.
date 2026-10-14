@@ -1,7 +1,0 @@
-*.asv
-*.autosave
-slprj/
-*.slxc
-*.mat
-!results_normal.mat
-!results_acl_torn.mat

@@ -4,7 +4,7 @@ function gesture_smoothed = simulink_function_block(emg_sample)
 %
 % This block is called once per simulation time step with ONE new
 % multichannel EMG sample (a row vector [1 x N_channels]). It buffers
-% samples internally, and once it has a full 200 ms window, it computes
+% samples internally at 100 Hz, and once it has a full 200 ms window, it computes
 % features, classifies the gesture, and applies majority-vote smoothing
 % over the last 5 predictions to avoid flicker.
 %
@@ -15,12 +15,12 @@ function gesture_smoothed = simulink_function_block(emg_sample)
 %     coefficients to persistent constants (codegen cannot load .mat
 %     files directly at runtime - see note at bottom).
 %  3) Set the block's sample time to match your EMG sample rate (e.g.
-%     1/2000 s if fs = 2000 Hz).
+%     1/100 s for RMS-processed NinaPro DB1).
 
-    persistent buffer buf_idx history model_mu model_sigma zc_thr fs_local model
+    persistent buffer buf_idx history model_mu model_sigma slope_thr model
 
     n_channels = numel(emg_sample);
-    win_len = round(0.2 * 2000);   % 200 ms at fs = 2000 Hz - EDIT if your fs differs
+    win_len = 20;  % 200 ms at the NinaPro DB1 sampling rate of 100 Hz
 
     if isempty(buffer)
         buffer = zeros(win_len, n_channels);
@@ -33,8 +33,7 @@ function gesture_smoothed = simulink_function_block(emg_sample)
         model = S.chosen_model;      %#ok<NASGU>
         model_mu = S.mu;
         model_sigma = S.sigma;
-        zc_thr = S.zc_threshold;
-        fs_local = S.fs; %#ok<NASGU>
+        slope_thr = S.slope_threshold;
     end
 
     % --- Shift buffer and insert new sample ---
@@ -45,7 +44,7 @@ function gesture_smoothed = simulink_function_block(emg_sample)
 
     if buf_idx >= win_len
         % --- Extract features on the current full window ---
-        feat = extract_features(buffer, zc_thr);
+        feat = extract_features(buffer, slope_thr);
         feat = (feat - model_mu) ./ model_sigma;
 
         % --- Predict (extrinsic call since predict() isn't codegen-native
@@ -60,12 +59,10 @@ function gesture_smoothed = simulink_function_block(emg_sample)
     end
 end
 
-% IMPLEMENTATION NOTE FOR YOUR DEFENSE:
+% IMPLEMENTATION NOTE:
 % Loading a .mat file and calling predict() inside a MATLAB Function
 % block only works in NORMAL SIMULATION mode (via coder.extrinsic),
 % not if you later generate embedded C code for a real microcontroller.
 % For a real embedded prosthetic controller, LDA is preferred over SVM
-% precisely because its "predict" step is just a matrix multiply +
-% argmax, which you would hand-code directly (no toolbox dependency) -
-% this is the argument the earlier project notes told you to make, and
-% now you can see concretely WHY it matters.
+% because its prediction step can be implemented as a matrix multiply
+% and argmax without a runtime toolbox dependency.
