@@ -42,8 +42,7 @@ holds out complete subject/exercise/repetition groups. It excludes windows
 that cross group boundaries. This avoids splitting overlapping windows
 from the same repetition across train and test, but it is not a
 subject-independent evaluation. The confusion matrices below are from the
-pilot run described here; earlier screenshots in the image folder are from
-the previous evaluation procedure.
+pilot run described here.
 
 Pilot run on 99,925 samples: LDA accuracy **74.4%** and balanced accuracy
 **67.4%**; linear SVM accuracy **78.7%** and balanced accuracy **74.2%**.
