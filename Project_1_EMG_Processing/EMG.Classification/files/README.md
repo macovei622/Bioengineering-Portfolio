@@ -45,6 +45,14 @@ subject-independent evaluation. The existing model file and confusion
 matrix screenshots predate this evaluation procedure and must not be
 presented as its results.
 
+Pilot run on 99,925 samples: LDA accuracy **74.4%** and balanced accuracy
+**67.4%**; linear SVM accuracy **78.7%** and balanced accuracy **74.2%**.
+The majority-class baseline was **27.0%**. The holdout contained three
+subject/exercise/repetition groups, but all samples were from the same
+subject, so these results do not measure generalization to unseen users.
+The reported LDA run used MATLAB's `pseudoLinear` discriminant type to
+handle a predictor with zero within-class variance.
+
 The required MATLAB toolbox is Statistics and Machine Learning Toolbox
 (`fitcdiscr`, `fitcecoc`, `confusionmat`, `confusionchart`).
 

@@ -89,7 +89,7 @@ X_train = (X_train - mu) ./ sigma;
 X_test  = (X_test  - mu) ./ sigma;
 
 %% 6) Train LDA
-lda_model = fitcdiscr(X_train, Y_train);
+lda_model = fitcdiscr(X_train, Y_train, 'DiscrimType', 'pseudoLinear');
 Y_pred_lda = predict(lda_model, X_test);
 acc_lda = mean(Y_pred_lda == Y_test);
 balanced_acc_lda = mean_class_recall(Y_test, Y_pred_lda);
