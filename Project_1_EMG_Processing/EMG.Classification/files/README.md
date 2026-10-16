@@ -41,9 +41,9 @@ The pipeline processes a contiguous prefix of up to 100,000 samples and
 holds out complete subject/exercise/repetition groups. It excludes windows
 that cross group boundaries. This avoids splitting overlapping windows
 from the same repetition across train and test, but it is not a
-subject-independent evaluation. The existing model file and confusion
-matrix screenshots predate this evaluation procedure and must not be
-presented as its results.
+subject-independent evaluation. The confusion matrices below are from the
+pilot run described here; earlier screenshots in the image folder are from
+the previous evaluation procedure.
 
 Pilot run on 99,925 samples: LDA accuracy **74.4%** and balanced accuracy
 **67.4%**; linear SVM accuracy **78.7%** and balanced accuracy **74.2%**.
@@ -52,6 +52,12 @@ subject/exercise/repetition groups, but all samples were from the same
 subject, so these results do not measure generalization to unseen users.
 The reported LDA run used MATLAB's `pseudoLinear` discriminant type to
 handle a predictor with zero within-class variance.
+
+### Pilot-run confusion matrices
+
+![LDA confusion matrix: accuracy 74.4%, balanced accuracy 67.4%](../../images/emg-lda-confusion-matrix-grouped-holdout.png)
+
+![SVM confusion matrix: accuracy 78.7%, balanced accuracy 74.2%](../../images/emg-svm-confusion-matrix-grouped-holdout.png)
 
 The required MATLAB toolbox is Statistics and Machine Learning Toolbox
 (`fitcdiscr`, `fitcecoc`, `confusionmat`, `confusionchart`).
