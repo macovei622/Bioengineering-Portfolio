@@ -23,3 +23,10 @@ helpsearch*/
 .buildtool/
 *.sbproj.backup
 *.sbproj.bak
+
+# Python caches and generated project outputs
+__pycache__/
+*.py[cod]
+.pytest_cache/
+Project_1_EMG_Processing/EMG.Classification/files/python/outputs*/
+Project_3_Scaffold_Diffusion/python/scaffold_diffusion_results.png
