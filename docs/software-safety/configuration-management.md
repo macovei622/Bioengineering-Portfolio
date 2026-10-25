@@ -2,9 +2,10 @@
 
 ## Source baseline
 
-All authoritative source changes are tracked in Git. The initial safety and
-lifecycle documentation baseline is repository revision `be95405`; update this
-file when defining a later release baseline.
+All authoritative source changes are tracked in Git. The software and
+test-evidence baseline referenced by this package is repository revision
+`be95405`, which predates the package. Update this file when defining a later
+release baseline.
 
 Each release or result intended for external use should identify:
 

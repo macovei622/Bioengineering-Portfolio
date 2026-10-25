@@ -46,7 +46,8 @@ reassessed by the responsible organization and qualified personnel.
 
 ## Baseline
 
-The initial documentation baseline is associated with repository revision
-`be95405` (English repository update, 2026-10-25). The package itself is a
-subsequent documentation change. Revisions should update the baseline and
-evidence links when software, data, intended use, or assumptions change.
+The software and test-evidence baseline referenced by this package is
+repository revision `be95405` (2026-10-25), which predates these documents.
+The safety and lifecycle package was added in a subsequent revision.
+Revisions should update the baseline and evidence links when software, data,
+intended use, or assumptions change.

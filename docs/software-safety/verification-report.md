@@ -8,7 +8,8 @@ system safety assessment, or proof of conformity with ISO 14971 or IEC 62304.
 
 ## Current automated evidence
 
-At documentation baseline `be95405`, the combined focused test command was:
+At software and test-evidence baseline `be95405` (before this documentation
+package was added), the combined focused test command was:
 
 ```bash
 python3 -m pytest -q \
