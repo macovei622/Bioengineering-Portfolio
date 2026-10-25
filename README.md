@@ -6,9 +6,9 @@
 
 Welcome to my portfolio of computational bioengineering projects. My focus lies at the intersection of biomechanics, tissue engineering, and neuroprosthetics, using Python, MATLAB, and Simulink to build and evaluate computational models.
 
-## 📘 Подробное руководство на русском
+## 📘 Project Theory Guide
 
-См. [теорию, ход вычислений, обоснование методов, альтернативы и ограничения всех трёх проектов](./PROJECTS_THEORY_GUIDE_RU.md).
+See the [theory, calculations, methods, alternatives, and limitations for all three projects](./PROJECTS_THEORY_GUIDE.md).
 
 ## 🚀 Projects Overview
 

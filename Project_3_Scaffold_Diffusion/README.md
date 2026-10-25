@@ -76,7 +76,7 @@ Instead of using commercial black-box software, I developed a custom numerical s
 * **Algorithm:** Iterative Jacobi method using vectorized matrix shifts in MATLAB. The outer boundary and manually drawn channels are held at the perfusion concentration.
 
 ## 📊 Results for the specified geometries
-*(See the [images](./images) folder for the concentration heatmap.)*
+![Oxygen concentration in the solid and channelized scaffold geometries](./images/oxygen-diffusion-heatmap.png)
 
 **Key Findings:**
 * **Solid mask:** The model reports **31.4% necrotic tissue pixels** and viable tissue equal to **66.8% of the full 150 × 150 grid**.
