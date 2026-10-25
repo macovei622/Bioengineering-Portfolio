@@ -10,6 +10,10 @@ Welcome to my portfolio of computational bioengineering projects. My focus lies 
 
 See the [theory, calculations, methods, alternatives, and limitations for all three projects](./PROJECTS_THEORY_GUIDE.md).
 
+## Software Safety and Lifecycle
+
+See the [educational risk-management and software lifecycle documentation](./docs/software-safety/README.md). It is informed by ISO 14971 and IEC 62304 concepts and is not a claim of compliance, certification, or medical-device readiness.
+
 ## 🚀 Projects Overview
 
 ### 1. [EMG Gesture Classification](./Project_1_EMG_Processing/EMG.Classification/files)

@@ -1,5 +1,9 @@
 # EMG Gesture Classification
 
+For the educational risk register, software requirements, verification
+evidence, and lifecycle notes, see the
+[software safety and lifecycle package](../../../docs/software-safety/README.md).
+
 ## Python implementation
 
 The Python implementation is in [`python/`](./python/). It streams either

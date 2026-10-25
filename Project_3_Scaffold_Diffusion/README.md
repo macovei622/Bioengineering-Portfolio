@@ -1,5 +1,9 @@
 # 2D Scaffold Oxygen Diffusion Model
 
+For the educational risk register, software requirements, verification
+evidence, and lifecycle notes, see the
+[software safety and lifecycle package](../docs/software-safety/README.md).
+
 ## Python implementation
 
 [`python/scaffold_diffusion.py`](./python/scaffold_diffusion.py) ports the
